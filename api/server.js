@@ -4,10 +4,11 @@ const dotenv= require("dotenv");
 dotenv.config({ path : "./config/config.env"});
 
 const productRoutes= require("./routes/productRoutes");
+const {logbook}= require("./middlewares/logbook");
 
 const app= express();
 
-//creating basic routes
+app.use(logbook);
 
 app.use("/api/v1/products", productRoutes);
 
