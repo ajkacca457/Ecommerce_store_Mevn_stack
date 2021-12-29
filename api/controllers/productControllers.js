@@ -1,28 +1,39 @@
-exports.getProducts=(req,res,next)=> {
+exports.getProducts= (req,res)=>{
     res.status(200).json({
         success:true,
-        message:"you have hit the correct route"
-    });
-};
+        message:"you found all the products successfully"
+    })
 
-exports.postProduct=(req,res,next)=> {
-    res.status(200).json({
-        success:true,
-        message:"you have hit the correct route"
-    });
 }
 
-
-exports.updateProduct=(req,res,next)=> {
+exports.postProduct= (req,res)=> {
     res.status(200).json({
         success:true,
-        message:`you want to edit ${req.params.id}`
-    });
+        message: "you have created a product successfully"
+    })
+
 }
 
-exports.deleteProduct=(req,res,next)=> {
+exports.singleProduct= (req,res)=> {
     res.status(200).json({
         success:true,
-        message:`you want to delete ${req.params.id}`
-    });
-};
+        message: "you have found a product successfully"
+    })
+
+}
+
+exports.updateProduct= (req,res)=> {
+    res.status(200).json({
+        success:true,
+        message: "you have updated the product successfully"
+    })
+
+}
+
+exports.deleteProduct= (req,res)=> {
+    res.status(200).json({
+        success:true,
+        message: "you have deleted the product successfully"
+    })
+
+}
