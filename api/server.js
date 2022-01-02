@@ -12,6 +12,7 @@ dotenv.config({
 dbConnection();
 
 const app= express();
+app.use(express.json());
 
 app.use(logbook);
 
