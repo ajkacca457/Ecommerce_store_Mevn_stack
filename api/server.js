@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const productRouter= require("./routes/productRoutes");
 const logbook= require("./middlewares/logbook");
 const dbConnection= require("./config/db.js");
+const errorHandler=require("./middlewares/errorHandler");
 
 
 dotenv.config({
@@ -17,6 +18,8 @@ app.use(express.json());
 app.use(logbook);
 
 app.use("/api/v1/products",productRouter);
+
+app.use(errorHandler);
 
 const PORT= process.env.PORT || 5000;
 

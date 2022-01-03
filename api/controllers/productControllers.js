@@ -1,10 +1,11 @@
 const Product= require("../models/Products");
+const ErrorClass=require("../utils/ErrorClass");
 
 exports.getProducts=async (req,res,next)=>{
     try {
     const products= await Product.find();
     if(!products) {
-        res.status(404).json({
+      return  res.status(404).json({
             success:false,
             message:"The products you are looking for doesnt exists"
         })
@@ -42,7 +43,6 @@ exports.postProduct=async (req,res,next)=> {
             error: error
         })
 
-
     }
 
 }
@@ -51,7 +51,7 @@ exports.singleProduct= async (req,res,next)=> {
     try {
         const product= await Product.findById(req.params.id);
         if(!product) {
-            res.status(404).json({
+            return res.status(404).json({
                 success:false,
                 message:"The product you are looking for doesnt exists"
             })  
@@ -64,12 +64,7 @@ exports.singleProduct= async (req,res,next)=> {
         })
         
     } catch (error) {
-        res.status(200).json({
-            success:false,
-            Error:error,
-            message: "Try again"
-        })
-            
+     next(new ErrorClass(`Invalid id or product`,501));
     }
 
 }
@@ -82,7 +77,7 @@ exports.updateProduct= async (req,res,next)=> {
         });
 
         if(!product) {
-            res.status(400).json({
+            return  res.status(400).json({
                 success:false,
                 message: "Product cannot be found"
             })  
@@ -111,7 +106,7 @@ exports.deleteProduct=async (req,res,next)=> {
     try {
      const product= await Product.findByIdAndDelete(req.params.id);
         if(!product) {
-            res.status(400).json({
+        return res.status(400).json({
                 success:false,
                 message: "not a valid product/id"
             })
