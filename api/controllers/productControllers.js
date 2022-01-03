@@ -1,21 +1,39 @@
 const Product= require("../models/Products");
 
-exports.getProducts= (req,res,next)=>{
+exports.getProducts=async (req,res,next)=>{
+    try {
+    const products= await Product.find();
+    if(!products) {
+        res.status(404).json({
+            success:false,
+            message:"The products you are looking for doesnt exists"
+        })
+    }
     res.status(200).json({
         success:true,
-        message:"you found all the products successfully"
+        products:products,
+        count: products.length,
+        message:"Here are your list of products"
     })
+        
+    } catch (error) {
+        res.status(404).json({
+            success:false,
+            Error: error,
+            message:"Try again"
+        })
+    
+    }
 
 }
 
 exports.postProduct=async (req,res,next)=> {
-    const product= await Product.create(req.body);
-
     try {
+        const product= await Product.create(req.body);
         res.status(200).json({
             success:true,
+            data:product,
             message: "you have created a product successfully",
-            product:product
         })
         
     } catch (error) {
@@ -29,26 +47,90 @@ exports.postProduct=async (req,res,next)=> {
 
 }
 
-exports.singleProduct= (req,res,next)=> {
-    res.status(200).json({
-        success:true,
-        message: "you have found a product successfully"
-    })
+exports.singleProduct= async (req,res,next)=> {
+    try {
+        const product= await Product.findById(req.params.id);
+        if(!product) {
+            res.status(404).json({
+                success:false,
+                message:"The product you are looking for doesnt exists"
+            })  
+        }
+
+        res.status(200).json({
+            success:true,
+            data:product,
+            message: "Product found",
+        })
+        
+    } catch (error) {
+        res.status(200).json({
+            success:false,
+            Error:error,
+            message: "Try again"
+        })
+            
+    }
 
 }
 
-exports.updateProduct= (req,res,next)=> {
-    res.status(200).json({
-        success:true,
-        message: "you have updated the product successfully"
-    })
+exports.updateProduct= async (req,res,next)=> {
+    try {
+        const product= await Product.findByIdAndUpdate(req.params.id, req.body, {
+            new:true,
+            runValidators:true
+        });
+
+        if(!product) {
+            res.status(400).json({
+                success:false,
+                message: "Product cannot be found"
+            })  
+        }
+        
+        res.status(200).json({
+            success:true,
+            data:product,
+            message: "you have updated the product successfully"
+        })
+
+        
+    } catch (error) {
+        res.status(200).json({
+            success:true,
+            Error:error,
+            message: "Try again."
+        })    
+        
+    }
 
 }
 
-exports.deleteProduct= (req,res,next)=> {
-    res.status(200).json({
-        success:true,
-        message: "you have deleted the product successfully"
-    })
+exports.deleteProduct=async (req,res,next)=> {
+
+    try {
+     const product= await Product.findByIdAndDelete(req.params.id);
+        if(!product) {
+            res.status(400).json({
+                success:false,
+                message: "not a valid product/id"
+            })
+
+        }
+        res.status(200).json({
+            success:true,
+            data: product,
+            message: "you have deleted the product successfully"
+        })
+        
+    } catch (error) {
+ 
+        res.status(400).json({
+            success:false,
+            Error:error,
+            message: "Try again"
+        })
+        
+    }
 
 }
