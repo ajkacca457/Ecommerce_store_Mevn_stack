@@ -5,10 +5,7 @@ exports.getProducts=async (req,res,next)=>{
     try {
     const products= await Product.find();
     if(!products) {
-      return  res.status(404).json({
-            success:false,
-            message:"The products you are looking for doesnt exists"
-        })
+      return  new ErrorClass("Products doesnt exists.",404);
     }
     res.status(200).json({
         success:true,
@@ -18,12 +15,7 @@ exports.getProducts=async (req,res,next)=>{
     })
         
     } catch (error) {
-        res.status(404).json({
-            success:false,
-            Error: error,
-            message:"Try again"
-        })
-    
+        next(error);
     }
 
 }
@@ -31,6 +23,11 @@ exports.getProducts=async (req,res,next)=>{
 exports.postProduct=async (req,res,next)=> {
     try {
         const product= await Product.create(req.body);
+        if(!product) {
+            return new ErrorClass("Give required info to create product", 404);
+
+        }
+
         res.status(200).json({
             success:true,
             data:product,
@@ -38,10 +35,7 @@ exports.postProduct=async (req,res,next)=> {
         })
         
     } catch (error) {
-        res.status(400).json({
-            success:false,
-            error: error
-        })
+        next(error);
 
     }
 
@@ -51,10 +45,7 @@ exports.singleProduct= async (req,res,next)=> {
     try {
         const product= await Product.findById(req.params.id);
         if(!product) {
-            return res.status(404).json({
-                success:false,
-                message:"The product you are looking for doesnt exists"
-            })  
+            return new ErrorClass("Product not found", 404);
         }
 
         res.status(200).json({
@@ -64,7 +55,7 @@ exports.singleProduct= async (req,res,next)=> {
         })
         
     } catch (error) {
-     next(new ErrorClass(`Invalid id or product`,501));
+     next(error);
     }
 
 }
@@ -77,10 +68,7 @@ exports.updateProduct= async (req,res,next)=> {
         });
 
         if(!product) {
-            return  res.status(400).json({
-                success:false,
-                message: "Product cannot be found"
-            })  
+            return new ErrorClass("product not found to update",404); 
         }
         
         res.status(200).json({
@@ -91,11 +79,7 @@ exports.updateProduct= async (req,res,next)=> {
 
         
     } catch (error) {
-        res.status(200).json({
-            success:true,
-            Error:error,
-            message: "Try again."
-        })    
+        next(error);
         
     }
 
@@ -106,11 +90,7 @@ exports.deleteProduct=async (req,res,next)=> {
     try {
      const product= await Product.findByIdAndDelete(req.params.id);
         if(!product) {
-        return res.status(400).json({
-                success:false,
-                message: "not a valid product/id"
-            })
-
+        return new ErrorClass("product not found to delete", 404);
         }
         res.status(200).json({
             success:true,
@@ -119,12 +99,7 @@ exports.deleteProduct=async (req,res,next)=> {
         })
         
     } catch (error) {
- 
-        res.status(400).json({
-            success:false,
-            Error:error,
-            message: "Try again"
-        })
+        next(error);
         
     }
 
