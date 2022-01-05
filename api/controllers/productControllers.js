@@ -1,8 +1,8 @@
 const Product= require("../models/Products");
 const ErrorClass=require("../utils/ErrorClass");
+const asyncHandler= require("../middlewares/asyncHandler");
 
-exports.getProducts=async (req,res,next)=>{
-    try {
+exports.getProducts=asyncHandler(async (req,res,next)=>{
     const products= await Product.find();
     if(!products) {
       return  new ErrorClass("Products doesnt exists.",404);
@@ -13,15 +13,9 @@ exports.getProducts=async (req,res,next)=>{
         count: products.length,
         message:"Here are your list of products"
     })
-        
-    } catch (error) {
-        next(error);
-    }
+})
 
-}
-
-exports.postProduct=async (req,res,next)=> {
-    try {
+exports.postProduct=asyncHandler(async (req,res,next)=> {
         const product= await Product.create(req.body);
         if(!product) {
             return new ErrorClass("Give required info to create product", 404);
@@ -32,17 +26,9 @@ exports.postProduct=async (req,res,next)=> {
             success:true,
             data:product,
             message: "you have created a product successfully",
-        })
-        
-    } catch (error) {
-        next(error);
+        })})
 
-    }
-
-}
-
-exports.singleProduct= async (req,res,next)=> {
-    try {
+exports.singleProduct= asyncHandler(async (req,res,next)=> {
         const product= await Product.findById(req.params.id);
         if(!product) {
             return new ErrorClass("Product not found", 404);
@@ -52,16 +38,9 @@ exports.singleProduct= async (req,res,next)=> {
             success:true,
             data:product,
             message: "Product found",
-        })
-        
-    } catch (error) {
-     next(error);
-    }
+        })})
 
-}
-
-exports.updateProduct= async (req,res,next)=> {
-    try {
+exports.updateProduct= asyncHandler(async (req,res,next)=> {
         const product= await Product.findByIdAndUpdate(req.params.id, req.body, {
             new:true,
             runValidators:true
@@ -75,19 +54,9 @@ exports.updateProduct= async (req,res,next)=> {
             success:true,
             data:product,
             message: "you have updated the product successfully"
-        })
+        })})
 
-        
-    } catch (error) {
-        next(error);
-        
-    }
-
-}
-
-exports.deleteProduct=async (req,res,next)=> {
-
-    try {
+exports.deleteProduct= asyncHandler(async (req,res,next)=> {
      const product= await Product.findByIdAndDelete(req.params.id);
         if(!product) {
         return new ErrorClass("product not found to delete", 404);
@@ -96,11 +65,4 @@ exports.deleteProduct=async (req,res,next)=> {
             success:true,
             data: product,
             message: "you have deleted the product successfully"
-        })
-        
-    } catch (error) {
-        next(error);
-        
-    }
-
-}
+        })})
