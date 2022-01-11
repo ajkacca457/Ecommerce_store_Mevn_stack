@@ -3,7 +3,29 @@ const ErrorClass=require("../utils/ErrorClass");
 const asyncHandler= require("../middlewares/asyncHandler");
 
 exports.getProducts=asyncHandler(async (req,res,next)=>{
-    const products= await Product.find();
+    //copy the queryString
+
+    let reqQuery= {...req.query};
+
+    let queryString= JSON.stringify(reqQuery);
+    queryString=queryString.replace(/\b(gt|lt|gte|lte|in)\b/g, item=> `$${item}`);
+    
+    let query= Product.find(JSON.parse(queryString));
+
+    if(reqQuery.select) {
+        const selectString= reqQuery.select.split(",").join(" ");
+        query= query.select(selectString);
+    }
+
+    if(reqQuery.sort) {
+        const sortString=reqQuery.sort.split(",").join(" ");
+        query=query.sort(sortString);
+    }else {
+        query=query.sort("createdAt");
+    }
+
+    const products= await query;    
+
     if(!products) {
       return  new ErrorClass("Products doesnt exists.",404);
     }
