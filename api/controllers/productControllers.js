@@ -24,6 +24,30 @@ exports.getProducts=asyncHandler(async (req,res,next)=>{
         query=query.sort("createdAt");
     }
 
+    const page= parseInt(req.query.page,10)||10;
+    const limit= parseInt(req.query.limit,10)||25;
+    const startIndex= (page-1)*limit;
+    const endIndex= page*limit;
+    const total= await Product.countDocuments();
+
+    query= query.skip(startIndex).limit(limit);
+
+    let pagination= {};
+
+    if(endIndex<total) {
+        pagination.next= {
+            page:page+1,
+            limit
+        }
+    };
+
+    if(startIndex>0) {
+        pagination.prev= {
+            page:page-1,
+            limit
+        }
+    };
+
     const products= await query;    
 
     if(!products) {
@@ -31,6 +55,7 @@ exports.getProducts=asyncHandler(async (req,res,next)=>{
     }
     res.status(200).json({
         success:true,
+        pagination:pagination,
         products:products,
         count: products.length,
         message:"Here are your list of products"
