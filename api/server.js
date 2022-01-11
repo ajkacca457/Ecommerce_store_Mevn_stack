@@ -1,6 +1,6 @@
 const express= require("express");
 const dotenv = require("dotenv");
-const productRouter= require("./routes/productRoutes");
+const categoryRouter= require("./routes/categoryRoutes");
 const logbook= require("./middlewares/logbook");
 const dbConnection= require("./config/db.js");
 const errorHandler=require("./middlewares/errorHandler");
@@ -17,7 +17,7 @@ app.use(express.json());
 
 app.use(logbook);
 
-app.use("/api/v1/products",productRouter);
+app.use("/api/v1/categories",categoryRouter);
 
 app.use(errorHandler);
 
