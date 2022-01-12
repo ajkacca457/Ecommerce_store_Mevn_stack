@@ -1,0 +1,28 @@
+[
+{
+"name" : "rebook shoes",
+"description": "One of the expensive shoes you can get. It is very comfortable for any people of any age",
+"size":"M",
+"price":550,
+"rating":4,
+"category":"61dd6e05020f8f7723047bb7"
+},
+{
+    "name" : "Puma shoes",
+    "description": "One of the expensive shoes you can get. It is very comfortable for any people of any age",
+    "size":"L",
+    "price":490,
+    "rating":4,
+    "category":"61dd6e05020f8f7723047bb7"
+    },
+
+{
+        "name" : "Bata shoes",
+        "description": "One of the expensive shoes you can get. It is very comfortable for any people of any age",
+        "size":"M",
+        "price":190,
+        "rating":3,
+        "category":"61dd6e05020f8f7723047bb7"
+    }
+
+]
