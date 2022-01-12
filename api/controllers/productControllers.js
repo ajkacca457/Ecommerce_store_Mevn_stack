@@ -33,6 +33,28 @@ res.status(200).json({
 
 
 
+exports.singleProduct=asyncHandler(async (req,res,next)=> {
+
+    let query;
+
+    query= Product.findById(req.params.id);
+
+    const product= await query;
+
+    if(!product) {
+        return new ErrorClass("Product cant be found",404)
+    }
+
+    res.status(200).json({
+        success:true,
+        data:product,
+        message:"product found"
+    })
+
+});
+
+
+
 exports.postProduct= asyncHandler(async (req,res,next)=> {
 
     let query;
