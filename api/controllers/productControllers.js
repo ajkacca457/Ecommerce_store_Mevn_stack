@@ -74,3 +74,23 @@ exports.postProduct= asyncHandler(async (req,res,next)=> {
     })
 
 })
+
+
+exports.updateProduct=asyncHandler(async (req,res,next)=> {
+
+    const product= Product.findByIdAndUpdate(req.params.id, req.body, {
+        new:true,
+        runValidators:true
+    })
+
+    if(!product) {
+        return new ErrorClass("product cant be updated", 404);
+    }
+
+    res.status(200).json({
+        success:true,
+        data: product,
+        message: "Product is updated"
+    })
+
+})
