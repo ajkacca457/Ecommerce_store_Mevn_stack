@@ -78,7 +78,7 @@ exports.postProduct= asyncHandler(async (req,res,next)=> {
 
 exports.updateProduct=asyncHandler(async (req,res,next)=> {
 
-    const product= Product.findByIdAndUpdate(req.params.id, req.body, {
+    const product=await Product.findByIdAndUpdate(req.params.id, req.body, {
         new:true,
         runValidators:true
     })
@@ -91,6 +91,23 @@ exports.updateProduct=asyncHandler(async (req,res,next)=> {
         success:true,
         data: product,
         message: "Product is updated"
+    })
+
+})
+
+
+exports.deleteProduct=asyncHandler(async (req,res,next)=> {
+
+    const product= await Product.findByIdAndDelete(req.params.id);
+
+    if(!product) {
+        return new ErrorClass("Product not found", 404);
+    }
+
+    res.status(200).json({
+        success:true,
+        data:product,
+        message:"Product is deleted"
     })
 
 })
