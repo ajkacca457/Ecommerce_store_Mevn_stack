@@ -1,6 +1,7 @@
 const asyncHandler= require("../middlewares/asyncHandler");
 const ErrorClass= require("../utils/ErrorClass");
 const Product= require("../models/Products");
+const Category= require("../models/Categories");
 
 
 exports.getProducts= asyncHandler(async (req,res,next)=> {
@@ -57,11 +58,15 @@ exports.singleProduct=asyncHandler(async (req,res,next)=> {
 
 exports.postProduct= asyncHandler(async (req,res,next)=> {
 
-    let query;
+   req.body.category= req.params.categoryId;
 
-    query= Product.create(req.body);
+   const category= await Category.findById(req.params.categoryId);
 
-    const product= await query;
+   if(!category) {
+    return new ErrorClass("not a valid category",404);
+   }
+
+    const product= await Product.create(req.body);
 
     if(!product) {
         return new ErrorClass("product cant be created",404);
