@@ -7,7 +7,10 @@ exports.getCategories=asyncHandler(async (req,res,next)=>{
      let reqQuery= {...req.query};
      console.log(reqQuery);
     let query;
-    query= Category.find();
+    query= Category.find().populate({
+        path:"products",
+        select:"name description price"
+    });
 
     if(reqQuery.select) {
         const selectString= reqQuery.select.split(",").join(" ");
@@ -105,6 +108,7 @@ exports.deleteCategory= asyncHandler(async (req,res,next)=> {
         if(!category) {
         return new ErrorClass("category not found to delete", 404);
         }
+        category.remove();
         res.status(200).json({
             success:true,
             data: category,

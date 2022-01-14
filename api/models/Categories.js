@@ -1,4 +1,5 @@
 const mongoose= require("mongoose");
+const { default: slugify } = require("slugify");
 
 const CategorySchema= new mongoose.Schema({
 
@@ -22,8 +23,29 @@ const CategorySchema= new mongoose.Schema({
         default: Date.now
     }
 
+}, {
+    toJSON:{ virtuals:true},
+    toObject: {virtuals:true}
 })
 
+CategorySchema.pre("save", function(next) {
+    this.slug= slugify(this.name, {lower:true})
+    next();
+
+})
+
+CategorySchema.virtual("products", {
+    ref: "Product",
+    localField:"_id",
+    foreignField:"category",
+    justOne:false
+})
+
+CategorySchema.pre("remove", async function(next) {
+    await this.model("Product").deleteMany({category:this._id});
+    next();
+
+})
 
 module.exports=mongoose.model("Category",CategorySchema);
 
