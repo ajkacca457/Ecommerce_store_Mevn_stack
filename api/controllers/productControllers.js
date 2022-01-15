@@ -2,6 +2,7 @@ const asyncHandler= require("../middlewares/asyncHandler");
 const ErrorClass= require("../utils/ErrorClass");
 const Product= require("../models/Products");
 const Category= require("../models/Categories");
+const path= require("path");
 
 
 exports.getProducts= asyncHandler(async (req,res,next)=> {
@@ -143,6 +144,22 @@ exports.uploadProductPhoto=asyncHandler(async (req,res,next)=> {
         return next(new ErrorClass("Image cant be more that 1MB"),400)
     }
 
-    console.log(file);
+    file.name=`photo_${product.id}${path.parse(file.name).ext}`;
+
+    file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async(err)=> {
+        if(err) {
+            return next(new ErrorClass("Something went wrong.Try again later"),500)
+        }
+
+        await Product.findByIdAndUpdate(req.params.id, {
+            productImg:file.name
+        });
+        
+        res.status(200).json({
+            success: true,
+            data: file.name
+        })
+
+    })
 
 })
