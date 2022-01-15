@@ -133,5 +133,16 @@ exports.uploadProductPhoto=asyncHandler(async (req,res,next)=> {
         return next(new ErrorClass("please upload an image", 404));
     }
 
+    let file= req.files.file;
+
+    if(!file.mimetype.startsWith("image")){
+        return next(new ErrorClass("please add a valid image"),400)
+    }
+
+    if(file.size>process.env.MAX_FILE_SIZE) {
+        return next(new ErrorClass("Image cant be more that 1MB"),400)
+    }
+
+    console.log(file);
 
 })
