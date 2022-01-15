@@ -1,4 +1,5 @@
 const mongoose= require("mongoose");
+const { default: slugify } = require("slugify");
 
 
 const ProductSchema= new mongoose.Schema({
@@ -37,6 +38,17 @@ const ProductSchema= new mongoose.Schema({
         required:true
 
     }
+
+})
+
+
+ProductSchema.pre("save", function(next){
+
+    this.slug= slugify(this.name, {
+        lower:true
+    });
+
+    next();
 
 })
 

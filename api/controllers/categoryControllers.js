@@ -76,7 +76,10 @@ exports.postCategory=asyncHandler(async (req,res,next)=> {
         })})
 
 exports.singleCategory= asyncHandler(async (req,res,next)=> {
-        const category= await Category.findById(req.params.id);
+        const category= await Category.findById(req.params.id).populate({
+            path:"products",
+            select:"name price"
+        });
         if(!category) {
             return new ErrorClass("category not found", 404);
         }

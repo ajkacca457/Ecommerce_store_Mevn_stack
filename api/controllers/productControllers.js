@@ -38,7 +38,10 @@ exports.singleProduct=asyncHandler(async (req,res,next)=> {
 
     let query;
 
-    query= Product.findById(req.params.id);
+    query= Product.findById(req.params.id).populate({
+        path:"category",
+        select: "name description"
+    });
 
     const product= await query;
 
