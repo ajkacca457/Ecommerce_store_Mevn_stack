@@ -36,7 +36,30 @@ if(req.query.sort) {
     query.sort(sortString);
 }
 
-const products= await query;
+const page= parseInt(req.query.page,10)||1;
+const limit= parseInt(req.query.limit,10)||10;
+const startIndex=(page-1)*limit;
+const endIndex= page*limit;
+const total= await Product.countDocuments();
+
+let pagination= {};
+
+if(endIndex<total) {
+    pagination.next= {
+        page: page+1,
+        limit
+    }
+}
+
+if(startIndex>0) {
+    pagination.prev= {
+        page: page-1,
+        limit
+    }
+}
+
+
+const products= await query.skip(startIndex).limit(limit);
 
 if(!products){
     return next(new ErrorClass("products are not found", 404));
@@ -44,6 +67,7 @@ if(!products){
 
 res.status(200).json({
     success:true,
+    pagination:pagination,
     count:products.length,
     data:products,
     message: "All the products are listed"
