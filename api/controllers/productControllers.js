@@ -7,16 +7,34 @@ const path= require("path");
 
 exports.getProducts= asyncHandler(async (req,res,next)=> {
 
+    const reqQuery= {...req.query};
+    let queryString= JSON.stringify(reqQuery);
+    queryString=queryString.replace(/\b(gt|gte|lt|lte|in)\b/, (match)=> {
+        return `$${match}`
+    });
+
+    console.log(queryString);
+
     let query;
 
     if (req.params.categoryId) {
-        query= Product.find({category:req.params.categoryId});
+        query= Product.find({...JSON.parse(queryString),category:req.params.categoryId});
     } else {
-        query= Product.find().populate({
+        query= Product.find(JSON.parse(queryString)).populate({
             path:"category",
             select:"name description"
         });
     }
+
+if(req.query.select) {
+    let selectString= req.query.select.split(",").join(" ");
+    query.select(selectString);
+}
+
+if(req.query.sort) {
+    let sortString= req.query.sort.split(",").join(" ");
+    query.sort(sortString);
+}
 
 const products= await query;
 
