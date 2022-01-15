@@ -1,5 +1,6 @@
 const express= require("express");
 const dotenv = require("dotenv");
+const fileUpload= require("express-fileupload");
 const categoryRouter= require("./routes/categoryRoutes");
 const productRouter= require("./routes/productRoutes");
 const logbook= require("./middlewares/logbook");
@@ -15,6 +16,7 @@ dbConnection();
 
 const app= express();
 app.use(express.json());
+app.use(fileUpload());
 
 app.use(logbook);
 

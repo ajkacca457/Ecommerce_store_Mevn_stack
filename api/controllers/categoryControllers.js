@@ -51,7 +51,7 @@ exports.getCategories=asyncHandler(async (req,res,next)=>{
     const categories= await query;   
 
     if(!categories) {
-      return  new ErrorClass("Categories doesnt exists.",404);
+      return  next(new ErrorClass("Categories doesnt exists.",404));
     }
     res.status(200).json({
         success:true,
@@ -65,7 +65,7 @@ exports.getCategories=asyncHandler(async (req,res,next)=>{
 exports.postCategory=asyncHandler(async (req,res,next)=> {
         const category= await Category.create(req.body);
         if(!category) {
-            return new ErrorClass("Give required info to create category", 404);
+            return next(new ErrorClass("Give required info to create category", 404));
 
         }
 
@@ -81,7 +81,7 @@ exports.singleCategory= asyncHandler(async (req,res,next)=> {
             select:"name price"
         });
         if(!category) {
-            return new ErrorClass("category not found", 404);
+            return next(new ErrorClass("category not found", 404));
         }
 
         res.status(200).json({
@@ -97,7 +97,7 @@ exports.updateCategory= asyncHandler(async (req,res,next)=> {
         });
 
         if(!category) {
-            return new ErrorClass("category not found to update",404); 
+            return next(new ErrorClass("category not found to update",404)); 
         }
         
         res.status(200).json({
@@ -109,7 +109,7 @@ exports.updateCategory= asyncHandler(async (req,res,next)=> {
 exports.deleteCategory= asyncHandler(async (req,res,next)=> {
      const category= await Category.findByIdAndDelete(req.params.id);
         if(!category) {
-        return new ErrorClass("category not found to delete", 404);
+        return next(new ErrorClass("category not found to delete", 404));
         }
         category.remove();
         res.status(200).json({

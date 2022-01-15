@@ -20,7 +20,7 @@ exports.getProducts= asyncHandler(async (req,res,next)=> {
 const products= await query;
 
 if(!products){
-    return new ErrorClass("products are not found", 404);
+    return next(new ErrorClass("products are not found", 404));
 }
 
 res.status(200).json({
@@ -46,7 +46,7 @@ exports.singleProduct=asyncHandler(async (req,res,next)=> {
     const product= await query;
 
     if(!product) {
-        return new ErrorClass("Product cant be found",404)
+        return next(new ErrorClass("Product cant be found",404));
     }
 
     res.status(200).json({
@@ -66,13 +66,13 @@ exports.postProduct= asyncHandler(async (req,res,next)=> {
    const category= await Category.findById(req.params.categoryId);
 
    if(!category) {
-    return new ErrorClass("not a valid category",404);
+    return next(new ErrorClass("not a valid category",404));
    }
 
     const product= await Product.create(req.body);
 
     if(!product) {
-        return new ErrorClass("product cant be created",404);
+        return next(new ErrorClass("product cant be created",404));
     }
 
     res.status(200).json({
@@ -92,7 +92,7 @@ exports.updateProduct=asyncHandler(async (req,res,next)=> {
     })
 
     if(!product) {
-        return new ErrorClass("product cant be updated", 404);
+        return next(new ErrorClass("product cant be updated", 404));
     }
 
     res.status(200).json({
@@ -109,7 +109,7 @@ exports.deleteProduct=asyncHandler(async (req,res,next)=> {
     const product= await Product.findByIdAndDelete(req.params.id);
 
     if(!product) {
-        return new ErrorClass("Product not found", 404);
+        return next(new ErrorClass("Product not found", 404));
     }
 
     res.status(200).json({
@@ -117,5 +117,21 @@ exports.deleteProduct=asyncHandler(async (req,res,next)=> {
         data:product,
         message:"Product is removed"
     })
+
+})
+
+
+exports.uploadProductPhoto=asyncHandler(async (req,res,next)=> {
+
+    const product = await Product.findById(req.params.id);
+
+    if(!product) {
+        return next(new ErrorClass("product is not found", 404))
+    }
+
+    if(!req.files) {
+        return next(new ErrorClass("please upload an image", 404));
+    }
+
 
 })
