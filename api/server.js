@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const fileUpload= require("express-fileupload");
 const categoryRouter= require("./routes/categoryRoutes");
 const productRouter= require("./routes/productRoutes");
+const authRouter= require("./routes/authRoutes");
 const logbook= require("./middlewares/logbook");
 const dbConnection= require("./config/db.js");
 const errorHandler=require("./middlewares/errorHandler");
@@ -22,6 +23,7 @@ app.use(logbook);
 
 app.use("/api/v1/categories",categoryRouter);
 app.use("/api/v1/products", productRouter);
+app.use("/api/v1/auth", authRouter);
 
 app.use(errorHandler);
 
