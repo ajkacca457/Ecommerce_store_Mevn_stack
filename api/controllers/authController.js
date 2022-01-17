@@ -14,16 +14,7 @@ exports.registerUser= asyncHandler(async (req,res,next)=> {
         return next(new ErrorClass("something went wrong in registration, 404"))
     }  
 
-    const token= user.getJsonToken();
-
-    console.log(token);
- 
-    res.status(200).json({
-        success: true,
-        token:token,
-        message: "user created successfully"
-    })
-
+    sendTokenAndCookie(user,res,"user created successfully");
 })
 
 
@@ -49,13 +40,23 @@ exports.loginUser=asyncHandler(async (req,res,next)=> {
         return next(new ErrorClass("Invalid password", 404))
     }
 
-    const token= user.getJsonToken();
-
-    res.status(200).json({
-       success:true,
-       token:token,
-       message:"login successful"
-    })
-    
+  sendTokenAndCookie(user,res,"login successful");  
 
 })
+
+
+const sendTokenAndCookie=(user,res,message)=> {
+const token= user.getJsonToken();
+
+const options= {
+    expires: new Date(Date.now()+ process.env.JWT_COOKIE_EXPIRE*24*60*60*1000),
+    httpOnly:true
+}
+
+res.status(200).cookie("token",token,options).json({
+    success:true,
+    token:token,
+    message:message
+})
+}
+
