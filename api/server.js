@@ -7,6 +7,7 @@ const authRouter= require("./routes/authRoutes");
 const logbook= require("./middlewares/logbook");
 const dbConnection= require("./config/db.js");
 const errorHandler=require("./middlewares/errorHandler");
+const cookieParser= require("cookie-parser");
 
 
 dotenv.config({
@@ -18,6 +19,7 @@ dbConnection();
 const app= express();
 app.use(express.json());
 app.use(fileUpload());
+app.use(cookieParser());
 
 app.use(logbook);
 
