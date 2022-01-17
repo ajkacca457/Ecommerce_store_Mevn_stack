@@ -30,3 +30,15 @@ exports.protectRoutes= asyncHandler(async (req,res,next)=> {
     next();
 })
 
+
+
+exports.authorize=(...roles)=> {
+return (req,res,next)=> {
+    if(!roles.includes(req.user.role)) {
+        return next(new ErrorClass("not authorized to perform this task"))
+    }
+
+   next(); 
+
+}
+}
