@@ -10,7 +10,7 @@ router.use("/:categoryId/products", productRouter);
 
 router.route("/").get(getCategories).post(protectRoutes,authorize("admin"),postCategory);
 
-router.route("/:id").get(singleCategory).put(protectRoutes,updateCategory).delete(protectRoutes,deleteCategory);
+router.route("/:id").get(singleCategory).put(protectRoutes,authorize("admin"),updateCategory).delete(protectRoutes,authorize("admin"),deleteCategory);
 
 
 module.exports= router;
