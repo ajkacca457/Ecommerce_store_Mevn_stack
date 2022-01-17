@@ -45,6 +45,21 @@ exports.loginUser=asyncHandler(async (req,res,next)=> {
 })
 
 
+exports.userDetail=asyncHandler(async (req,res,next)=> {
+   const user= await User.findById(req.user._id);
+   if(!user) {
+       return next(new ErrorClass("User doesnt exists", 404));
+   }
+
+   res.status(200).json({
+       success:true,
+       data:user,
+       message:"User detail found"
+   })
+
+})
+
+
 const sendTokenAndCookie=(user,res,message)=> {
 const token= user.getJsonToken();
 
