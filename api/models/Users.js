@@ -39,6 +39,8 @@ const UserSchema= new mongoose.Schema({
 
 })
 
+// need to find out why lexical this doesnt work here.
+
 UserSchema.pre("save", async function(next) {
     const salt= await bcryptjs.genSalt(10);
     this.password= await bcryptjs.hash(this.password,salt);
@@ -51,6 +53,9 @@ UserSchema.methods.getJsonToken= function () {
     })
 };
 
+UserSchema.methods.matchPassword=async function (givenpassword) {
+ return await bcryptjs.compare(givenpassword,this.password)   
+}
 
 module.exports= mongoose.model("User",UserSchema);
 
