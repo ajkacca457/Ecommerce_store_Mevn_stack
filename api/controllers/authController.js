@@ -12,16 +12,16 @@ exports.registerUser= asyncHandler(async (req,res,next)=> {
 
     if(!user) {
         return next(new ErrorClass("something went wrong in registration, 404"))
-    }
+    }  
 
+    const token= user.getJsonToken();
+
+    console.log(token);
+ 
     res.status(200).json({
         success: true,
-        data: {
-            id:user._id,
-            name: user.name,
-            email:user.email,
-        },
-        message: "user will be created successfully"
+        token:token,
+        message: "user created successfully"
     })
 
 })
